@@ -1,84 +1,83 @@
-# terraform-aws-securitygroup
+# terraform-aws-security-group
 
+Usage: 
 
+```
+module "security_groups" {
+    source = "https://github.com/petercort/terraform-aws-security-group"
+    name = "Web-SG"
+    description = "Security group for web servers."
+    vpc_name = "my-workload-vpc"
+    ingress_rules = [
+        {
+            "description": "Allow 443",
+            "from_port": "443",
+            "to_port": "443",
+            "protocol": "TCP",
+            "security_group_name": "igw-sg"
+        },
+        {
+            "description": "Allow 8443",
+            "from_port": "8443",
+            "to_port": "8443",
+            "protocol": "TCP",
+            "security_group_name": "igw-sg"
+        }
+    ]
+    egress_rules = [
+        {
+            "description": "Allow App Traffic",
+            "from_port": "8080",
+            "to_port": "8080",
+            "protocol": "TCP",
+            "security_group_name": "app_sg"
+        }
+    ]
 
-<!-- BEGINNING OF PRE-COMMIT-TERRAFORM DOCS HOOK -->
+}
+```
+This module is specifically designed to handle security group to security group based rules, where none of the security groups exist. 
+
+The module will deploy the security groups, and then deploy the rules and attach them to the security group. 
+
+<!-- BEGIN_TF_DOCS -->
 ## Requirements
 
 No requirements.
 
 ## Providers
 
-No providers.
+| Name | Version |
+|------|---------|
+| <a name="provider_aws"></a> [aws](#provider\_aws) | n/a |
 
 ## Modules
 
-|                             Name                                  |                   Source                | Version |
-|-------------------------------------------------------------------|-----------------------------------------|---------|
-| <a name="module_securitygroup"></a> [securitygroup](#module\_sns) | terraform-aws-modules/securitygroup/aws | 19.11.0 |
+No modules.
 
 ## Resources
 
-No resources.
+| Name | Type |
+|------|------|
+| [aws_security_group.create_security_groups](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/security_group) | resource |
+| [aws_security_group_rule.create_sg_egress_rules](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/security_group_rule) | resource |
+| [aws_security_group_rule.create_sg_ingress_rules](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/security_group_rule) | resource |
+| [aws_security_group.security_group](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/data-sources/security_group) | data source |
+| [aws_vpcs.sg_vpc](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/data-sources/vpcs) | data source |
 
 ## Inputs
 
-|      Name      | Description | Type | Default | Required |
-|----------------|-------------|------|---------|:--------:|
-| <a name="input__securitygroup"></a> [sns](#input\_securitygroup) | n/a | <pre>map(object({<br>   
-    auto_groups                                              = optional(map(string), null)<br>
-    computed_egress_rules                                    = optional(list(string), [])<br>
-    computed_egress_with_cidr_blocks                         = optional(map(string), {})<br>
-    computed_egress_with_ipv6_cidr_blocks                    = optional(map(string), {})<br>
-    computed_egress_with_self                                = optional(map(string), {})<br>
-    computed_egress_with_source_security_group_id            = optional(map(string), {})<br>
-    computed_ingress_rules                                   = optional(list(string), [])<br>
-    computed_ingress_with_cidr_blocks                        = optional(map(string), {})<br>
-    computed_ingress_with_ipv6_cidr_blocks                   = optional(map(string), {})<br>
-    computed_ingress_with_self                               = optional(map(string), {})<br>
-    computed_ingress_with_source_security_group_id           = optional(map(string), {})<br>
-    create                                                   = optional(bool, true)<br>
-    create_sg                                                = optional(bool, true)<br>
-    create_timeout                                           = optional(string, "10m")<br>
-    delete_timeout                                           = optional(string, "15m")<br>
-    description                                              = optional(string, "Security Group managed by Terraform")<br>
-    egress_cidr_blocks                                       = optional(list(string), ["0.0.0.0/0"])<br>
-    egress_ipv6_cidr_blocks                                  = optional(list(string), ["::/0"])<br>
-    egress_prefix_list_ids                                   = optional(list(string), [])<br>
-    egress_rules                                             = optional(list(string), [])<br>
-    egress_with_cidr_blocks                                  = optional(map(string), {})<br>
-    egress_with_ipv6_cidr_blocks                             = optional(map(string), {})<br>
-    egress_with_self                                         = optional(map(string), {})<br>
-    egress_with_source_security_group_id                     = optional(map(string), {})<br>
-    ingress_cidr_blocks                                      = optional(list(string), [])<br>
-    ingress_ipv6_cidr_blocks                                 = optional(list(string), [])<br>
-    ingress_prefix_list_ids                                  = optional(list(string), [])<br>
-    ingress_rules                                            = optional(list(string), [])<br>
-    ingress_with_cidr_blocks                                 = optional(map(string), {})<br>
-    ingress_with_ipv6_cidr_blocks                            = optional(map(string), {})<br>
-    ingress_with_self                                        = optional(map(string), {})<br>
-    ingress_with_source_security_group_id                    = optional(map(string), {})<br>
-    name                                                     = optional(list(string), [])<br>
-    number_of_computed_egress_rules                          = optional(number, 0)<br>
-    number_of_computed_egress_with_cidr_blocks               = optional(number, 0)<br>
-    number_of_computed_egress_with_ipv6_cidr_blocks          = optional(number, 0)<br>
-    number_of_computed_egress_with_self                      = optional(number, 0)<br>
-    number_of_computed_egress_with_source_security_group_id  = optional(number, 0)<br>
-    number_of_computed_ingress_rules                         = optional(number, 0)<br>
-    number_of_computed_ingress_with_cidr_blocks              = optional(number, 0)<br>
-    number_of_computed_ingress_with_ipv6_cidr_blocks         = optional(number, 0)<br>
-    number_of_computed_ingress_with_self                     = optional(number, 0)<br>
-    number_of_computed_ingress_with_source_security_group_id = optional(number, 0)<br>
-    revoke_rules_on_delete                                   = optional(bool, false)<br>
-    rules                                                    = optional(map(list(any)), {})<br>
-    security_group_id                                        = optional(string, null)<br>
-    tags                                                     = optional(map(string), null)<br>
-    use_name_prefix                                          = optional(bool, true)<br>
-    vpc_id                                                   = optional(string, null)     }))</pre> | `{}` | no |
+| Name | Description | Type | Default | Required |
+|------|-------------|------|---------|:--------:|
+| <a name="input_description"></a> [description](#input\_description) | n/a | `string` | n/a | yes |
+| <a name="input_egress_rules"></a> [egress\_rules](#input\_egress\_rules) | n/a | <pre>list(object({<br>      description = string<br>      from_port = string<br>      to_port = string<br>      protocol = string<br>      security_group_name = string<br>      }))</pre> | `[]` | no |
+| <a name="input_ingress_rules"></a> [ingress\_rules](#input\_ingress\_rules) | n/a | <pre>list(object({<br>      description = string<br>      from_port = string<br>      to_port = string<br>      protocol = string<br>      security_group_name = string<br>      }))</pre> | `[]` | no |
+| <a name="input_name"></a> [name](#input\_name) | n/a | `string` | n/a | yes |
+| <a name="input_vpc_name"></a> [vpc\_name](#input\_vpc\_name) | n/a | `string` | n/a | yes |
 
 ## Outputs
 
-|                                        Name                                     | Description |
-|---------------------------------------------------------------------------------|-------------|
-| <a name="output_securitygroup_arn"></a> [eks\_arn](#output\_securitygroup\_arn) |     n/a     |
-<!-- END OF PRE-COMMIT-TERRAFORM DOCS HOOK -->
+| Name | Description |
+|------|-------------|
+| <a name="output_security_group_id"></a> [security\_group\_id](#output\_security\_group\_id) | n/a |
+<!-- END_TF_DOCS -->

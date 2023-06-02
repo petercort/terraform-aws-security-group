@@ -10,21 +10,21 @@ variable "vpc_name" {
 }
 variable "ingress_rules" {
   type = list(object({
-      description = string
-      from_port = string
-      to_port = string
-      protocol = string
-      security_group_name = string
-      }))
+    description         = string
+    from_port           = string
+    to_port             = string
+    protocol            = string
+    security_group_name = string
+  }))
   default = []
 }
 variable "egress_rules" {
   type = list(object({
-      description = string
-      from_port = string
-      to_port = string
-      protocol = string
-      security_group_name = string
-      }))
+    description         = string
+    from_port           = string
+    to_port             = string
+    protocol            = string
+    security_group_name = string
+  }))
   default = []
 }
