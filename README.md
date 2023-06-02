@@ -4,36 +4,35 @@ Usage:
 
 ```
 module "security_groups" {
-    source = "https://github.com/petercort/terraform-aws-security-group"
-    name = "Web-SG"
-    description = "Security group for web servers."
-    vpc_name = "my-workload-vpc"
-    ingress_rules = [
-        {
-            "description": "Allow 443",
-            "from_port": "443",
-            "to_port": "443",
-            "protocol": "TCP",
-            "security_group_name": "igw-sg"
-        },
-        {
-            "description": "Allow 8443",
-            "from_port": "8443",
-            "to_port": "8443",
-            "protocol": "TCP",
-            "security_group_name": "igw-sg"
-        }
-    ]
-    egress_rules = [
-        {
-            "description": "Allow App Traffic",
-            "from_port": "8080",
-            "to_port": "8080",
-            "protocol": "TCP",
-            "security_group_name": "app_sg"
-        }
-    ]
-
+  source      = "git::https://github.com/petercort/terraform-aws-security-group"
+  name        = "Web-SG"
+  description = "Security group for web servers."
+  vpc_name    = "my-workload-vpc"
+  ingress_rules = [
+    {
+      description         = "Allow 443",
+      from_port           = "443",
+      to_port             = "443",
+      protocol            = "TCP",
+      security_group_name = "igw-sg"
+    },
+    {
+      description         = "Allow 8443",
+      from_port           = "8443",
+      to_port             = "8443",
+      protocol            = "TCP",
+      security_group_name = "igw-sg"
+    }
+  ]
+  egress_rules = [
+    {
+      description         = "Allow App Traffic",
+      from_port           = "8080",
+      to_port             = "8080",
+      protocol            = "TCP",
+      security_group_name = "app_sg"
+    }
+  ]
 }
 ```
 This module is specifically designed to handle security group to security group based rules, where none of the security groups exist. 
