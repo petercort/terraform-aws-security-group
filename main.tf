@@ -31,8 +31,8 @@ resource "aws_security_group_rule" "create_sg_rules" {
   from_port                = each.value.from_port
   to_port                  = each.value.to_port
   protocol                 = each.value.protocol 
-  cidr_blocks              = each.value.ipv4_cidr_block
-  ipv6_cidr_blocks         = each.value.ipv6_cidr_block
+  cidr_blocks              = each.value.ipv4_cidr_block == [] ? null : each.value.ipv4_cidr_block
+  ipv6_cidr_blocks         = each.value.ipv6_cidr_block == [] ? null : each.value.ipv6_cidr_block
   source_security_group_id = each.value.security_group_name != "" ? data.aws_security_group.security_group[each.value.security_group_name].id : null 
   depends_on = [resource.aws_security_group.create_security_groups]
 }
