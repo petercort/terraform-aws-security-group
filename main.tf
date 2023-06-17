@@ -2,6 +2,7 @@ locals {
   source_security_groups = toset(concat([for val in var.rules : val.security_group_name if val.security_group_name != ""]))
 }
 data "aws_security_group" "security_group" {
+  depends_on = [resource.aws_security_group.create_security_groups]
   for_each = local.source_security_groups
   name     = each.value
 }
@@ -23,7 +24,7 @@ resource "aws_security_group" "create_security_groups" {
   }
 }
 
-resource "aws_security_group_rule" "create_sg_ingress_rules" {
+resource "aws_security_group_rule" "create_sg_rules" {
   for_each                 = { for index, rule in var.rules : rule.description => rule }
   security_group_id        = aws_security_group.create_security_groups.id
   type                     = each.value.rule_type
@@ -34,4 +35,5 @@ resource "aws_security_group_rule" "create_sg_ingress_rules" {
   cidr_blocks              = each.value.ipv4_cidr_block
   ipv6_cidr_blocks         = each.value.ipv6_cidr_block
   source_security_group_id = each.value.security_group_name != "" ? data.aws_security_group.security_group[each.value.security_group_name].id : null 
+  depends_on = [resource.aws_security_group.create_security_groups]
 }
