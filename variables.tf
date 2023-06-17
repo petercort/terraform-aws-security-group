@@ -8,23 +8,16 @@ variable "description" {
 variable "vpc_name" {
   type = string
 }
-variable "ingress_rules" {
+variable "rules" {
   type = list(object({
+    rule_type           = string
     description         = string
     from_port           = string
     to_port             = string
     protocol            = string
-    security_group_name = string
-  }))
-  default = []
-}
-variable "egress_rules" {
-  type = list(object({
-    description         = string
-    from_port           = string
-    to_port             = string
-    protocol            = string
-    security_group_name = string
+    security_group_name = optional(string, "")
+    ipv4_cidr_block     = optional(list(string), [])
+    ipv6_cidr_block     = optional(list(string), [])
   }))
   default = []
 }
