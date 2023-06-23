@@ -7,17 +7,10 @@ data "aws_security_group" "security_group" {
   name     = each.value
 }
 
-data "aws_vpcs" "sg_vpc" {
-  filter {
-    name   = "tag:Name"
-    values = [var.vpc_name]
-  }
-}
-
 resource "aws_security_group" "create_security_groups" {
   name        = var.name
   description = var.description
-  vpc_id      = data.aws_vpcs.sg_vpc.ids.0
+  vpc_id      = var.vpc_id
 
   tags = {
     Name = var.name

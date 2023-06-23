@@ -5,9 +5,10 @@ variable "name" {
 variable "description" {
   type = string
 }
-variable "vpc_name" {
+variable "vpc_id" {
   type = string
 }
+
 variable "rules" {
   type = list(object({
     rule_type           = string
