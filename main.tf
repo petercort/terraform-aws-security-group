@@ -1,6 +1,21 @@
+terraform {
+  required_version = ">= 0.15.0"
+
+  required_providers {
+    aws = {
+      source  = "hashicorp/aws"
+      version = ">= 3.72"
+    }
+  }
+}
+provider "aws" {
+  region = "us-east-1"
+}
+
 locals {
   source_security_groups = toset(concat([for val in var.rules : val.security_group_name if val.security_group_name != ""]))
 }
+
 data "aws_security_group" "security_group" {
   depends_on = [resource.aws_security_group.create_security_groups]
   for_each = local.source_security_groups
@@ -18,7 +33,7 @@ resource "aws_security_group" "create_security_groups" {
 }
 
 resource "aws_security_group_rule" "create_sg_rules" {
-  for_each                 = { for index, rule in var.rules : index => rule }
+  for_each                 = { for index, rule in var.rules : format("%s-%s-%s-%s", rule.rule_type, rule.protocol, rule.from_port, rule.to_port) => rule }
   security_group_id        = aws_security_group.create_security_groups.id
   type                     = each.value.rule_type
   from_port                = each.value.from_port
