@@ -1,17 +1,3 @@
-terraform {
-  required_version = ">= 0.15.0"
-
-  required_providers {
-    aws = {
-      source  = "hashicorp/aws"
-      version = ">= 3.72"
-    }
-  }
-}
-provider "aws" {
-  region = "us-east-1"
-}
-
 locals {
   source_security_groups = toset(concat([for val in var.rules : val.security_group_name if val.security_group_name != ""]))
 }
